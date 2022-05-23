@@ -1,0 +1,40 @@
+import requests
+def recipe_search(ingredient):
+    # Register to get an APP ID and key https://developer.edamam.com/
+    app_id = ' '
+    app_key = ' '
+    result = requests.get(
+        'https://api.edamam.com/search?q={}&app_id={}&app_key={}'.format(ingredient, app_id, app_key)
+    )
+    data = result.json()
+
+    return data['hits']
+
+print(recipe_search("salt"))
+
+
+def run():
+    ingredient = input('Enter an ingredient: ')
+
+    results = recipe_search(ingredient)
+    recipe_list=[]
+
+    for result in results:
+        recipe = result['recipe']
+        calories = int(recipe["calories"])
+        recipe_list.append(calories)
+        sorted(recipe_list)
+
+        print(recipe['label'])
+        print(recipe['uri'])
+        print(int(recipe["calories"]))
+        print()
+
+# to save into a txt file
+    with open("recipes.txt", "w+") as text_file:
+            for result in results:        
+                text_file.write(str(result["recipe"]["label"])+"\n")
+                text_file.write(str(result["recipe"]["uri"])+"\n")
+                text_file.write(str(result["recipe"]["calories"]) + "\n")
+
+run()
